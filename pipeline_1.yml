@@ -6,8 +6,8 @@ pool:
   vmImage: ubuntu-latest
 
 parameters:
-  - name: resourceGroupPrefix
-    displayName: Resource Group Prefix
+  - name: subnetPrefix
+    displayName: Subnet Prefix
     type: string
     default: fwlab
   - name: environment
@@ -52,7 +52,7 @@ stages:
             connectedServiceNameARM: ${{ parameters.azureServicePrincipal }}
             scriptType:  bash
             scriptLocation: inlineScript
-            inlineScript:  az group create -l ${{ parameters.location }} -n ${{ parameters.resourceGroupPrefix }}-${{ parameters.environment }}-rg
+            inlineScript:  az group create -l ${{ parameters.location }} -n ${{ parameters.subnetPrefix }}-${{ parameters.environment }}-rg
             failOnStandardError:  true
     - job: acceptTerms
       dependsOn: createResourceGroup

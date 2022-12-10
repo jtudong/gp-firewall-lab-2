@@ -45,14 +45,23 @@ parameters:
 stages:
 - stage: prerequisites
   jobs:
-    - job:  createResourceGroup
+    - job: createResourceGroup
       steps:
         - task: AzureCLI@2
           inputs:
-            connectedServiceNameARM: '${{ parameters.azureServicePrincipal }}'
+            connectedServiceNameARM: ${{ parameters.azureServicePrincipal }}
             scriptType:  bash
             scriptLocation: inlineScript
             inlineScript:  az group create -l ${{ parameters.location }} -n ${{ parameters.resourceGroupPrefix }}-${{ parameters.environment }}-rg
             failOnStandardError:  true
-
+    - job: acceptTerms
+      dependsOn: createResourceGroup
+      steps:
+      - task: AzureCLI@2
+          inputs:
+            connectedServiceNameARM: ${{ parameters.azureServicePrincipal }}
+            scriptType:  bash
+            scriptLocation: inlineScript
+            inlineScript:  az vm image terms accept --urn paloaltonetworks:vmseries1:byol:9.1.0
+            failOnStandardError: true
         

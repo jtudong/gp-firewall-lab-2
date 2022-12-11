@@ -72,7 +72,7 @@ stages:
           inputs:
             deploymentScope: 'Resource Group'
             azureResourceManagerConnection: ${{ parameters.azureServicePrincipal }}
-            subscriptionId: ${{ parameters.subscriptionID  }}
+            #subscriptionId: ${{ parameters.subscriptionID  }}
             action: 'Create or Update Resource Group'
             resourceGroupName: ${{ parameters.subnetPrefix }}-${{ parameters.environment }}-rg
             location: ${{ parameters.location }}

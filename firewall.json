@@ -22,39 +22,260 @@
     },
     "functions": [],
     "variables": {
-        "mgmtPrefix": "[concat('firewall-management-',parameters('environment'))]",
+        "mgmtPrefix": "[concat(parameters('subnetPrefix'),'-management')]",
         "tags": {
             "Department": "it",
             "Team": "networking",
             "Environment": "[parameters('environment')]",
             "Application": "[parameters('subnetPrefix')]"
-        }
+        },
+        "trustPrefix": "[concat(parameters('subnetPrefix'),'-trusted')]",
+        "uniqueId": "[uniqueString(resourceGroup().id)]",
+        "untrustPrefix": "[concat(parameters('subnetPrefix'),'-untrusted')]"
     },
     "resources": [
         {
             //  management NSG
-            "name": "[concat(variables('mgmtPrefix'),'-nsg')]",
+            "name": "[concat(variables('mgmtPrefix'),'-',parameters('environment'),'-nsg')]",
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2020-11-01",
             "tags": "[variables('tags')]",
             "location": "[parameters('location')]",
             "properties": {
                 "securityRules": [
-                    /* {
-                        "name": "nsgRule1",
+                    {
+                        "name": "AllowManagementInbound",
                         "properties": {
-                            "description": "description",
-                            "protocol": "Tcp",
+                            "description": "Allow Management Inbound",
+                            "direction": "Inbound",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 1000,
+                            "destinationPortRanges": [
+                                "22",
+                                "443"
+                            ],
+                            "sourceAddressPrefixes": [
+                                "63.156.58.20/32",
+                                "4.1.98.242/32",
+                                "72.208.101.143/32",
+                                "10.10.24.0/24"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "DenyAllInBound",
+                        "properties": {
+                            "description": "Deny All Inbound",
+                            "direction": "Inbound",
+                            "protocol": "*",
                             "sourcePortRange": "*",
                             "destinationPortRange": "*",
                             "sourceAddressPrefix": "*",
                             "destinationAddressPrefix": "*",
-                            "access": "Allow",
-                            "priority": 100,
-                            "direction": "Inbound"
+                            "access": "Deny",
+                            "priority": 4096,
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
                         }
-                    } */
+                    }
                 ]
+            }
+        },
+        {
+            // untrust NSG
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(variables('untrustPrefix'),'-',parameters('environment'),'-nsg')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "AllowAzureHealthProbeInBound",
+                        "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+                        "properties": {
+                            "description": "AllowAzureHealthProbeInBound",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "168.63.129.16/32",
+                            "destinationAddressPrefix": "10.16.91.0/24",
+                            "access": "Allow",
+                            "priority": 1000,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "Allow443And80InBound",
+                        "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+                        "properties": {
+                            "description": "Allow443And80InBound",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 1100,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [
+                                "443",
+                                "80"
+                            ],
+                            "sourceAddressPrefixes": [
+                                "63.156.58.20/32",
+                                "4.1.98.242/32",
+                                "72.208.101.143/32"
+                            ],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "AllowSSH",
+                        "properties": {
+                            "description": "AllowSSH",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 1200,
+                            "direction": "Inbound",
+                            "sourceAddressPrefixes": [
+                                "63.156.58.20/32",
+                                "4.1.98.242/32",
+                                "72.208.101.143/32"
+                            ],
+                            "destinationPortRanges": [
+                                "22",
+                                "6622"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "AllowIPsec",
+                        "properties": {
+                            "protocol": "Esp",
+                            "sourceAddressPrefixes": [
+                                "63.156.58.20/32",
+                                "4.1.98.242/32",
+                                "72.208.101.143/32"
+                            ],
+                            "sourcePortRange": "*",
+                            "destinationAddressPrefix": "*",
+                            "destinationPortRange": "*",
+                            "access": "Allow",
+                            "direction": "Inbound",
+                            "priority": 1210
+                        }
+                    },
+                    {
+                        "name": "AllowUDPforGlobalProtect",
+                        "properties": {
+                            "protocol": "Udp",
+                            "sourceAddressPrefixes": [
+                                "63.156.58.20/32",
+                                "4.1.98.242/32",
+                                "72.208.101.143/32"
+                            ],
+                            "sourcePortRange": "*",
+                            "destinationAddressPrefix": "*",
+                            "destinationPortRange": "4501",
+                            "access": "Allow",
+                            "direction": "Inbound",
+                            "priority": 1220
+                        }
+                    },
+                    {
+                        "name": "DenyAnyInBound",
+                        "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+                        "properties": {
+                            "description": "DenyAnyInBound",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Deny",
+                            "priority": 4095,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "DenyToVnetOutbound",
+                        "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+                        "properties": {
+                            "description": "DenyToVnetOutbound",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "10.16.0.0/16",
+                            "access": "Deny",
+                            "priority": 4096,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            // trust NSG
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(variables('trustPrefix'),'-',parameters('environment'),'-nsg')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "securityRules": []
+            }
+        },
+        {
+            // management PIP
+            "name": "[concat(variables('mgmtPrefix'),'-',parameters('environment'),'-pip')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2020-11-01",
+            "location": "[parameters('location')]",
+            "tags": "[variables('tags')]",
+            "sku": {
+                "name": "Standard"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Static",
+                "dnsSettings": {
+                    //"domainNameLabel": "[concat('fwmanagement', variables('uniqueId'))]"
+                    "domainNameLabel": "[if(not(empty(variables('mgmtPrefix'))),json(concat('\"',variables('mgmtPrefix'),'\"')),concat('fwmgmt', variables('uniqueId')))]"
+                }
+            }
+        },
+        {
+            // untrust PIP
+            "name": "[concat(variables('untrustPrefix'),'-',parameters('environment'),'-pip')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2020-11-01",
+            "location": "[parameters('location')]",
+            "tags": "[variables('tags')]",
+            "sku": {
+                "name": "Standard"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Static",
+                "dnsSettings": {
+                    "domainNameLabel": "[if(not(empty(variables('untrustPrefix'))),json(concat('\"',variables('untrustPrefix'),'\"')),concat('fwuntrust', variables('uniqueId')))]"
+                }
             }
         }
     ],

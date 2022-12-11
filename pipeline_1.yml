@@ -64,9 +64,9 @@ stages:
           scriptLocation: inlineScript
           inlineScript:  az vm image terms accept --urn paloaltonetworks:vmseries1:byol:9.1.0
           failOnStandardError: true
-- stage: create Firewall
+- stage: createFirewall
   jobs:
-    - job: createFirewall
+    - job: deployTemplate
       steps:
         - task: AzureResourceManagerTemplateDeployment@3
           inputs:

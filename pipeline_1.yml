@@ -73,7 +73,7 @@ stages:
             deploymentScope: 'Resource Group'
             azureResourceManagerConnection: ${{ parameters.azureServicePrincipal }}
             #subscriptionId: ${{ parameters.subscriptionID  }}
-            action: 'Create or Update Resource Group'
+            action: 'Create Or Update Resource Group'
             resourceGroupName: ${{ parameters.subnetPrefix }}-${{ parameters.environment }}-rg
             location: ${{ parameters.location }}
             templateLocation: 'Linked artifact'

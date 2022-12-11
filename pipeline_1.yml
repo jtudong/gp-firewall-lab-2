@@ -64,4 +64,20 @@ stages:
           scriptLocation: inlineScript
           inlineScript:  az vm image terms accept --urn paloaltonetworks:vmseries1:byol:9.1.0
           failOnStandardError: true
-        
+- stage: create Firewall
+  jobs:
+    - job: createFirewall
+      steps:
+        - task: AzureResourceManagerTemplateDeployment@3
+          inputs:
+            deploymentScope: 'Resource Group'
+            azureResourceManagerConnection: ${{ parameters.azureServicePrincipal }}
+            subscriptionId: ${{ parameters.subscriptionID  }}
+            action: 'Create or Update Resource Group'
+            resourceGroupName: ${{ parameters.subnetPrefix }}-${{ parameters.environment }}-rg
+            location: ${{ parameters.location }}
+            templateLocation: 'Linked artifact'
+            csmFile: firewall.json
+            csmParametersFile: firewall.parameters.json
+            overrideParameters:
+            deploymentMode: 'Incremental'

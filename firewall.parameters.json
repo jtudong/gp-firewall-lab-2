@@ -24,10 +24,10 @@
             "value": "byol"
         },
         "paVersion": {
-            "value": "9.1.0"
+            "value": "10.1.6"
         },
         "paOffer": {
-            "value": "vmseries1"
+            "value": "vmseries-flex"
         },
         "paVmSize": {
             "value": "Standard_DS3_v2"

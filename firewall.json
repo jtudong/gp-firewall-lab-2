@@ -623,6 +623,7 @@
             "value": "[reference(resourceId('Microsoft.Compute/virtualMachines',parameters('fwName'))).osProfile.adminUsername]"
         },
         "custom-data": {
+            "type": "string"
             "value": "[variables('customData')]"
         }
     }

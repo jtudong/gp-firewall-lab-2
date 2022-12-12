@@ -621,6 +621,9 @@
         "username": {
             "type": "string",
             "value": "[reference(resourceId('Microsoft.Compute/virtualMachines',parameters('fwName'))).osProfile.adminUsername]"
+        },
+        "custom-data": {
+            "value": "[variables('customData')]"
         }
     }
 }

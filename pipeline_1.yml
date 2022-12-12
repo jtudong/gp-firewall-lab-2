@@ -74,5 +74,5 @@ stages:
             templateLocation: 'Linked artifact'
             csmFile: firewall.json
             csmParametersFile: firewall.parameters.json
-            overrideParameters:
+            overrideParameters: -adminPassword $(adminPassword) -bootstrapAccessKey $(bootstrapAccessKey)
             deploymentMode: 'Incremental'

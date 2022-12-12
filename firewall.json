@@ -64,8 +64,7 @@
                                 "10.10.24.0/24"
                             ]
                         }
-                    },
-                    {
+                    },{
                         "name": "DenyAllInBound",
                         "properties": {
                             "description": "Deny All Inbound",
@@ -85,8 +84,7 @@
                     }
                 ]
             }
-        },
-        {
+        },{
             // untrust NSG
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2020-11-01",
@@ -112,8 +110,7 @@
                             "sourceAddressPrefixes": [],
                             "destinationAddressPrefixes": []
                         }
-                    },
-                    {
+                    },{
                         "name": "Allow443And80InBound",
                         "type": "Microsoft.Network/networkSecurityGroups/securityRules",
                         "properties": {
@@ -136,8 +133,7 @@
                             ],
                             "destinationAddressPrefixes": []
                         }
-                    },
-                    {
+                    },{
                         "name": "AllowSSH",
                         "properties": {
                             "description": "AllowSSH",
@@ -157,8 +153,7 @@
                                 "6622"
                             ]
                         }
-                    },
-                    {
+                    },{
                         "name": "AllowIPsec",
                         "properties": {
                             "protocol": "Esp",
@@ -174,8 +169,7 @@
                             "direction": "Inbound",
                             "priority": 1210
                         }
-                    },
-                    {
+                    },{
                         "name": "AllowUDPforGlobalProtect",
                         "properties": {
                             "protocol": "Udp",
@@ -191,8 +185,7 @@
                             "direction": "Inbound",
                             "priority": 1220
                         }
-                    },
-                    {
+                    },{
                         "name": "DenyAnyInBound",
                         "type": "Microsoft.Network/networkSecurityGroups/securityRules",
                         "properties": {
@@ -210,8 +203,7 @@
                             "sourceAddressPrefixes": [],
                             "destinationAddressPrefixes": []
                         }
-                    },
-                    {
+                    },{
                         "name": "DenyToVnetOutbound",
                         "type": "Microsoft.Network/networkSecurityGroups/securityRules",
                         "properties": {
@@ -232,8 +224,7 @@
                     }
                 ]
             }
-        },
-        {
+        },{
             // trust NSG
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2020-11-01",
@@ -242,8 +233,7 @@
             "properties": {
                 "securityRules": []
             }
-        },
-        {
+        },{
             // management PIP
             "name": "[concat(variables('mgmtPrefix'),'-',parameters('environment'),'-pip')]",
             "type": "Microsoft.Network/publicIPAddresses",
@@ -260,8 +250,7 @@
                     "domainNameLabel": "[if(not(empty(variables('mgmtPrefix'))),json(concat('\"',variables('mgmtPrefix'),'\"')),concat('fwmgmt', variables('uniqueId')))]"
                 }
             }
-        },
-        {
+        },{
             // untrust PIP
             "name": "[concat(variables('untrustPrefix'),'-',parameters('environment'),'-pip')]",
             "type": "Microsoft.Network/publicIPAddresses",
@@ -276,6 +265,57 @@
                 "dnsSettings": {
                     "domainNameLabel": "[if(not(empty(variables('untrustPrefix'))),json(concat('\"',variables('untrustPrefix'),'\"')),concat('fwuntrust', variables('uniqueId')))]"
                 }
+            }
+        },{
+            // Trusted subnet route table
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "2020-11-01",
+            "name": "firewall-trusted-rt",
+            "location": "[parameters('location')]",
+            "tags": "[variables('tags')]",
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "internet-forced-firewall",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.16.92.4",
+                            "hasBgpOverride": false
+                        }
+                    },{
+                        "name": "untrust-forced-firewall",
+                        "properties": {
+                            "addressPrefix": "10.16.91.0/24",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.16.92.4",
+                            "hasBgpOverride": false
+                        }
+                    }
+                ]
+            }
+        },{
+            // Unrusted subnet route table
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "2020-11-01",
+            "name": "firewall-untrusted-rt",
+            "location": "[parameters('location')]",
+            "tags": "[variables('tags')]",
+            "properties": {
+                "routes": [],
+                "disableBgpRoutePropagation": true
+            }
+        },{
+            // Management subnet route table
+            "name": "firewall-management-rt",
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "2020-11-01",
+            "location": "[parameters('location')]",
+            "tags": "[variables('tags')]",
+            "properties": {
+                "routes": [],
+                "disableBgpRoutePropagation": true
             }
         }
     ],

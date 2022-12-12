@@ -86,9 +86,10 @@
             }
         },{
             // untrust NSG
+            "name": "[concat(variables('untrustPrefix'),'-',parameters('environment'),'-nsg')]",
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2020-11-01",
-            "name": "[concat(variables('untrustPrefix'),'-',parameters('environment'),'-nsg')]",
+            "tags": "[variables('tags')]",
             "location": "[parameters('location')]",
             "properties": {
                 "securityRules": [
@@ -226,9 +227,10 @@
             }
         },{
             // trust NSG
+            "name": "[concat(variables('trustPrefix'),'-',parameters('environment'),'-nsg')]",
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2020-11-01",
-            "name": "[concat(variables('trustPrefix'),'-',parameters('environment'),'-nsg')]",
+            "tags": "[variables('tags')]",
             "location": "[parameters('location')]",
             "properties": {
                 "securityRules": []
@@ -238,8 +240,8 @@
             "name": "[concat(variables('mgmtPrefix'),'-',parameters('environment'),'-pip')]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2020-11-01",
-            "location": "[parameters('location')]",
             "tags": "[variables('tags')]",
+            "location": "[parameters('location')]",
             "sku": {
                 "name": "Standard"
             },
@@ -255,8 +257,8 @@
             "name": "[concat(variables('untrustPrefix'),'-',parameters('environment'),'-pip')]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2020-11-01",
-            "location": "[parameters('location')]",
             "tags": "[variables('tags')]",
+            "location": "[parameters('location')]",
             "sku": {
                 "name": "Standard"
             },
@@ -268,11 +270,11 @@
             }
         },{
             // Trusted subnet route table
+            "name": "firewall-trusted-rt",
             "type": "Microsoft.Network/routeTables",
             "apiVersion": "2020-11-01",
-            "name": "firewall-trusted-rt",
-            "location": "[parameters('location')]",
             "tags": "[variables('tags')]",
+            "location": "[parameters('location')]",
             "properties": {
                 "disableBgpRoutePropagation": false,
                 "routes": [
@@ -297,11 +299,11 @@
             }
         },{
             // Unrusted subnet route table
+            "name": "firewall-untrusted-rt",
             "type": "Microsoft.Network/routeTables",
             "apiVersion": "2020-11-01",
-            "name": "firewall-untrusted-rt",
-            "location": "[parameters('location')]",
             "tags": "[variables('tags')]",
+            "location": "[parameters('location')]",
             "properties": {
                 "routes": [],
                 "disableBgpRoutePropagation": true
@@ -311,8 +313,8 @@
             "name": "firewall-management-rt",
             "type": "Microsoft.Network/routeTables",
             "apiVersion": "2020-11-01",
-            "location": "[parameters('location')]",
             "tags": "[variables('tags')]",
+            "location": "[parameters('location')]",
             "properties": {
                 "routes": [],
                 "disableBgpRoutePropagation": true

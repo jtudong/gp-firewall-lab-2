@@ -88,9 +88,10 @@
         },
         {
             // untrust NSG
+            "name": "[concat(variables('untrustPrefix'),'-',parameters('environment'),'-nsg')]",
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2020-11-01",
-            "name": "[concat(variables('untrustPrefix'),'-',parameters('environment'),'-nsg')]",
+            "tags": "[variables('tags')]",
             "location": "[parameters('location')]",
             "properties": {
                 "securityRules": [
@@ -235,9 +236,10 @@
         },
         {
             // trust NSG
+            "name": "[concat(variables('trustPrefix'),'-',parameters('environment'),'-nsg')]",
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2020-11-01",
-            "name": "[concat(variables('trustPrefix'),'-',parameters('environment'),'-nsg')]",
+            "tags": "[variables('tags')]",
             "location": "[parameters('location')]",
             "properties": {
                 "securityRules": []
@@ -248,8 +250,8 @@
             "name": "[concat(variables('mgmtPrefix'),'-',parameters('environment'),'-pip')]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2020-11-01",
-            "location": "[parameters('location')]",
             "tags": "[variables('tags')]",
+            "location": "[parameters('location')]",
             "sku": {
                 "name": "Standard"
             },
@@ -266,8 +268,8 @@
             "name": "[concat(variables('untrustPrefix'),'-',parameters('environment'),'-pip')]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2020-11-01",
-            "location": "[parameters('location')]",
             "tags": "[variables('tags')]",
+            "location": "[parameters('location')]",
             "sku": {
                 "name": "Standard"
             },
@@ -276,6 +278,121 @@
                 "dnsSettings": {
                     "domainNameLabel": "[if(not(empty(variables('untrustPrefix'))),json(concat('\"',variables('untrustPrefix'),'\"')),concat('fwuntrust', variables('uniqueId')))]"
                 }
+            }
+        },
+        {
+            // Trusted subnet route table
+            "name": "[concat(parameters('subnetPrefix'),'-trusted-rt')]",
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "2020-11-01",
+            "tags": "[variables('tags')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "internet-forced-firewall",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.16.92.4",
+                            "hasBgpOverride": false
+                        }
+                    },
+                    {
+                        "name": "untrust-forced-firewall",
+                        "properties": {
+                            "addressPrefix": "10.16.91.0/24",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.16.92.4",
+                            "hasBgpOverride": false
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            // Unrusted subnet route table
+            "name": "[concat(parameters('subnetPrefix'),'-untrusted-rt')]",
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "2020-11-01",
+            "tags": "[variables('tags')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "routes": [],
+                "disableBgpRoutePropagation": true
+            }
+        },
+        {
+            // Management subnet route table
+            "name": "[concat(parameters('subnetPrefix'),'-management-rt')]",
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "2020-11-01",
+            "tags": "[variables('tags')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "routes": [],
+                "disableBgpRoutePropagation": true
+            }
+        },
+        {
+            "name": "[concat(parameters('subnetPrefix'),parameters('environment'),'-vnet')]",
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2020-11-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', concat(variables('mgmtPrefix'),'-',parameters('environment'),'-nsg'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', concat(variables('trustPrefix'),'-',parameters('environment'),'-nsg'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', concat(variables('untrustPrefix'),'-',parameters('environment'),'-nsg'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat(parameters('subnetPrefix'),'-management-rt'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat(parameters('subnetPrefix'),'-trusted-rt'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat(parameters('subnetPrefix'),'-untrusted-rt'))]"
+            ],
+            "tags": "[variables('tags')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.16.0.0/16"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[variables('mgmtPrefix')]",
+                        "properties": {
+                            "addressPrefix": "10.16.90.0/24",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups',concat(variables('mgmtPrefix'),'-',parameters('environment'),'-nsg'))]"
+                            },
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables',concat(parameters('subnetPrefix'),'-management-rt'))]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "[variables('untrustPrefix')]",
+                        "properties": {
+                            "addressPrefix": "10.16.91.0/24",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups',concat(variables('untrustPrefix'),'-',parameters('environment'),'-nsg'))]"
+                            },
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables',concat(parameters('subnetPrefix'),'-untrusted-rt'))]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "[variables('trustPrefix')]",
+                        "properties": {
+                            "addressPrefix": "10.16.92.0/24",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups',concat(variables('trustPrefix'),'-',parameters('environment'),'-nsg'))]"
+                            },
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables',concat(parameters('subnetPrefix'),'-trusted-rt'))]"
+                            }
+                        }
+                    }
+                ]
             }
         }
     ],

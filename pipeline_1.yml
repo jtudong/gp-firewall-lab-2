@@ -18,10 +18,6 @@ parameters:
       - prod
       - dev
       - sandbox
-  - name: subscriptionID
-    displayName: Subscription ID
-    type: string
-    default: 5af4ad96-ee54-40ce-9564-3a35874e68d9
   - name: azureServicePrincipal
     displayName: Azure Service Principal
     type: string
@@ -72,7 +68,6 @@ stages:
           inputs:
             deploymentScope: 'Resource Group'
             azureResourceManagerConnection: ${{ parameters.azureServicePrincipal }}
-            #subscriptionId: ${{ parameters.subscriptionID  }}
             action: 'Create Or Update Resource Group'
             resourceGroupName: ${{ parameters.subnetPrefix }}-${{ parameters.environment }}-rg
             location: ${{ parameters.location }}

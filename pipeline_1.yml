@@ -58,7 +58,7 @@ stages:
           connectedServiceNameARM: ${{ parameters.azureServicePrincipal }}
           scriptType:  bash
           scriptLocation: inlineScript
-          inlineScript:  az vm image terms accept --urn paloaltonetworks:vmseries1:byol:9.1.0
+          inlineScript:  az vm image terms accept --urn paloaltonetworks:vmseries-flex:byol:10.1.6
           failOnStandardError: true
 - stage: createFirewall
   jobs:
@@ -74,5 +74,5 @@ stages:
             templateLocation: 'Linked artifact'
             csmFile: firewall.json
             csmParametersFile: firewall.parameters.json
-            overrideParameters:
+            overrideParameters: -adminPassword $(adminPassword) -bootstrapAccessKey $(bootstrapAccessKey)
             deploymentMode: 'Incremental'

@@ -1,0 +1,84 @@
+trigger:
+  branches:
+    include:
+    - dev
+    exclude:
+    - master
+  paths:
+    exclude:
+    - *.yml
+
+pool:
+  vmImage: ubuntu-latest
+
+parameters:
+  - name: subnetPrefix
+    displayName: Subnet Prefix
+    type: string
+    default: fwlab
+  - name: environment
+    displayName: Environment
+    default: sandbox
+    type: string
+    values:
+      - prod
+      - dev
+      - sandbox
+  - name: azureServicePrincipal
+    displayName: Azure Service Principal
+    type: string
+    default: gp-firewall-lab-2
+  - name: location
+    displayName: Azure Region
+    type: string
+    default: westus3
+    values:
+      - westus3
+      - westus2
+      - westus
+  - name: deployfirewall
+    displayName: Deploy Firewall toggle
+    type: string
+    default: true
+    values:
+      - true
+      - false
+
+stages:
+- stage: prerequisites
+  jobs:
+    - job: createResourceGroup
+      steps:
+        - task: AzureCLI@2
+          inputs:
+            connectedServiceNameARM: ${{ parameters.azureServicePrincipal }}
+            scriptType:  bash
+            scriptLocation: inlineScript
+            inlineScript:  az group create -l ${{ parameters.location }} -n ${{ parameters.subnetPrefix }}-${{ parameters.environment }}-rg
+            failOnStandardError:  true
+    - job: acceptTerms
+      dependsOn: createResourceGroup
+      steps:
+      - task: AzureCLI@2
+        inputs:
+          connectedServiceNameARM: ${{ parameters.azureServicePrincipal }}
+          scriptType:  bash
+          scriptLocation: inlineScript
+          inlineScript:  az vm image terms accept --urn paloaltonetworks:vmseries-flex:byol:10.1.6
+          failOnStandardError: true
+- stage: createFirewall
+  jobs:
+    - job: deployTemplate
+      steps:
+        - task: AzureResourceManagerTemplateDeployment@3
+          inputs:
+            deploymentScope: 'Resource Group'
+            azureResourceManagerConnection: ${{ parameters.azureServicePrincipal }}
+            action: 'Create Or Update Resource Group'
+            resourceGroupName: ${{ parameters.subnetPrefix }}-${{ parameters.environment }}-rg
+            location: ${{ parameters.location }}
+            templateLocation: 'Linked artifact'
+            csmFile: firewall.json
+            csmParametersFile: firewall.parameters.json
+            overrideParameters: -adminPassword $(adminPassword) -bootstrapAccessKey $(bootstrapAccessKey)
+            deploymentMode: 'Incremental'

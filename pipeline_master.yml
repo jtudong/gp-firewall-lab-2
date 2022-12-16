@@ -1,6 +1,12 @@
 trigger:
-  - master
-  - dev
+  branches:
+    include:
+    - master
+    exclude:
+    - dev
+  paths:
+    exclude:
+    - *.yaml
 
 pool:
   vmImage: ubuntu-latest

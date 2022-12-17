@@ -43,7 +43,12 @@
         },
         "location": {
             "type": "string",
-            "defaultValue": ""
+            "defaultValue": "westus3",
+            "allowedValues": [
+                "westus",
+                "westus2",
+                "westus3"
+            ]
         },
         "paSku": {
             "type": "string",

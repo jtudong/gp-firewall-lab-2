@@ -6,7 +6,7 @@ trigger:
     - dev
   paths:
     exclude:
-    - *.yaml
+    - '*.yaml'
 
 pool:
   vmImage: ubuntu-latest

@@ -7,6 +7,7 @@ trigger:
   paths:
     exclude:
     - '*.yml'
+    - docs/README.md
 
 pool:
   vmImage: ubuntu-latest

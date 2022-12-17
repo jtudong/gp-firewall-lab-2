@@ -1,12 +1,12 @@
 trigger:
   branches:
     include:
-    - master
-    exclude:
     - dev
+    - master
   paths:
     exclude:
-    - '*.yaml'
+    - 'pipelines/*.yml'
+    - docs/README.md
 
 pool:
   vmImage: ubuntu-latest

@@ -1,12 +1,11 @@
 trigger:
   branches:
     include:
-    - dev
-    exclude:
     - master
+    - dev
   paths:
     exclude:
-    - '*.yml'
+    - 'pipelines/*.yml'
     - docs/README.md
 
 pool:

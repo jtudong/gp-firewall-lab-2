@@ -2,11 +2,6 @@ resources:
   pipelines:
   - pipeline: main
     source: pipeline_main
-    trigger:
-      branches:
-        include:
-        - master
-        - dev
 
 pool:
   vmImage: ubuntu-latest

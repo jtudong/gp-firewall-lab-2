@@ -13,4 +13,12 @@ pool:
 
 steps:
 - script: |
-    echo $(resources.pipeline.pipeline_main.subnetPrefix)
+    echo $(resources.pipeline.myresourcevars.pipelineID)
+    echo $(resources.pipeline.myresourcevars.runName)
+    echo $(resources.pipeline.myresourcevars.runID)
+    echo $(resources.pipeline.myresourcevars.runURI)
+    echo $(resources.pipeline.myresourcevars.sourceBranch)
+    echo $(resources.pipeline.myresourcevars.sourceCommit)
+    echo $(resources.pipeline.myresourcevars.sourceProvider)
+    echo $(resources.pipeline.myresourcevars.requestedFor)
+    echo $(resources.pipeline.myresourcevars.requestedForID)

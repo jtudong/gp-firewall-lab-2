@@ -43,15 +43,17 @@ parameters:
       - true
       - false
 
-steps:
-  - task: AzureCLI@2
-    inputs:
-      connectedServiceNameARM: ${{ parameters.azureServicePrincipal }}
-      scriptType: bash
-      scriptLocation: inlineScript
-      inlineScript: |
-        az group create -l ${{ parameters.location }} -n ${{ parameters.subnetPrefix }}-${{ parameters.environment }}-rg
-        az vm image terms accept --urn paloaltonetworks:vmseries-flex:byol:10.1.6
-      failOnStandardError: true
+jobs:
+  - job: prerequisites
+    steps:
+      - task: AzureCLI@2
+        inputs:
+          connectedServiceNameARM: ${{ parameters.azureServicePrincipal }}
+          scriptType: bash
+          scriptLocation: inlineScript
+          inlineScript: |
+            az group create -l ${{ parameters.location }} -n ${{ parameters.subnetPrefix }}-${{ parameters.environment }}-rg
+            az vm image terms accept --urn paloaltonetworks:vmseries-flex:byol:10.1.6
+          failOnStandardError: true
 
   

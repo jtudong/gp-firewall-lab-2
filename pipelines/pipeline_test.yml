@@ -13,12 +13,13 @@ pool:
 
 steps:
 - script: |
-    echo $(resources.pipeline.pipeline_main.pipelineID)
-    echo $(resources.pipeline.pipeline_main.runName)
-    echo $(resources.pipeline.pipeline_main.runID)
-    echo $(resources.pipeline.pipeline_main.runURI)
-    echo $(resources.pipeline.pipeline_main.sourceBranch)
-    echo $(resources.pipeline.pipeline_main.sourceCommit)
-    echo $(resources.pipeline.pipeline_main.sourceProvider)
-    echo $(resources.pipeline.pipeline_main.requestedFor)
-    echo $(resources.pipeline.pipeline_main.requestedForID)
+    echo $(resources.pipeline.main.pipelineID)
+    echo $(resources.pipeline.main.runName)
+    echo $(resources.pipeline.main.runID)
+    echo $(resources.pipeline.main.runURI)
+    echo $(resources.pipeline.main.sourceBranch)
+    echo $(resources.pipeline.main.sourceCommit)
+    echo $(resources.pipeline.main.sourceProvider)
+    echo $(resources.pipeline.main.requestedFor)
+    echo $(resources.pipeline.main.requestedForID)
+    echo $(resources.pipeline.main.subnetPrefix)

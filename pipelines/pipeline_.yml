@@ -1,14 +1,14 @@
-trigger:
-  branches:
-    include:
-    - dev
-    - master
-  paths:
-    exclude:
-    - 'pipelines/*.yml'
-    - docs/README.md
-    - 'config/*'
-    - 'license/*'
+#trigger:
+#  branches:
+#    include:
+#    - dev
+#    - master
+#  paths:
+#    exclude:
+#    - 'pipelines/*.yml'
+#    - docs/README.md
+#    - 'config/*'
+#    - 'license/*'
 
 pool:
   vmImage: ubuntu-latest

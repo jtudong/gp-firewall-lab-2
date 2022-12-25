@@ -51,7 +51,7 @@ jobs:
           connectedServiceNameARM: ${{ parameters.azureServicePrincipal }}
           scriptType: bash
           scriptLocation: inlineScript
-          inlineScript: az group create -l ${{ parameters.location }} -n $
+          inlineScript: az group create -l ${{ parameters.location }} -n ${{ parameters.subnetPrefix }}-${{ parameters.environment }}-rg
           failOnStandardError: true
 
   

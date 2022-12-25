@@ -1,14 +1,14 @@
 trigger:
   branches:
     include:
-    - dev
-    - master
+      - dev
+      - master
   paths:
     exclude:
-    - 'pipelines/*.yml'
-    - docs/README.md
-    - 'config/*'
-    - 'license/*'
+      - "pipelines/*.yml"
+      - docs/README.md
+      - "config/*"
+      - "license/*"
 
 parameters:
   - name: subnetPrefix
@@ -42,3 +42,16 @@ parameters:
     values:
       - true
       - false
+
+jobs:
+  - job: createResourceGroup
+    steps:
+      - task: AzureCLI@2
+        inputs:
+          connectedServiceNameARM: ${{ parameters.azureServicePrincipal }}
+          scriptType: bash
+          scriptLocation: inlineScript
+          inlineScript: az group create -l ${{ parameters.location }} -n $
+          failOnStandardError: true
+
+  

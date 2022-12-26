@@ -5,7 +5,7 @@ trigger:
       - master
   paths:
     exclude:
-      #- "pipelines/*.yml"
+      - "pipelines/*.yml"
       - docs/README.md
       - "config/*"
       - "license/*"
@@ -27,14 +27,14 @@ parameters:
     displayName: Azure Service Principal
     type: string
     default: gp-firewall-lab-2
-  - name: location
-    displayName: Azure Region
-    type: string
-    default: westus3
-    values:
-      - westus3
-      - westus2
-      - westus
+#  - name: location
+#    displayName: Azure Region
+#    type: string
+#    default: westus3
+#    values:
+#      - westus3
+#      - westus2
+#      - westus
 #  - name: deployfirewall
 #    displayName: Deploy Firewall toggle
 #    type: string

@@ -6,6 +6,9 @@ resources:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+- group: firewall-vars-1
+
 steps:
 - script: |
     echo $(resources.pipeline.main.pipelineID)
@@ -17,4 +20,6 @@ steps:
     echo $(resources.pipeline.main.sourceProvider)
     echo $(resources.pipeline.main.requestedFor)
     echo $(resources.pipeline.main.requestedForID)
-    echo $(resources.pipeline.main.subnetPrefix)
+    echo $(subnetPrefix)
+    echo $(location)
+    echo $(environment)

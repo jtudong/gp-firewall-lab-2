@@ -2,15 +2,21 @@ trigger:
   branches:
     include:
       - dev
-      - master
+      #- master
   paths:
     exclude:
       - "pipelines/*.yml"
       - docs/README.md
       - "config/*"
       - "license/*"
+      - "*.azcli"
 
 parameters:
+  - name: azureServicePrincipal
+    displayName: Azure Service Principal
+    type: string
+    default: gp-firewall-lab-2
+###  moved to variable group 'firewall-vars-1'
 #  - name: subnetPrefix
 #    displayName: Subnet Prefix
 #    type: string
@@ -23,10 +29,6 @@ parameters:
 #      - prod
 #      - dev
 #      - sandbox
-  - name: azureServicePrincipal
-    displayName: Azure Service Principal
-    type: string
-    default: gp-firewall-lab-2
 #  - name: location
 #    displayName: Azure Region
 #    type: string
@@ -46,17 +48,28 @@ parameters:
 variables:
 - group: firewall-vars-1
 
-jobs:
-  - job: prerequisites
-    steps:
+stages:
+- stage: prerequisites
+  jobs:
+    - job: createResourceGroup
+      steps:
+        - task: AzureCLI@2
+          inputs:
+            connectedServiceNameARM: ${{ parameters.azureServicePrincipal }}
+            scriptType: bash
+            scriptLocation: inlineScript
+            iinlineScript:  az group create -l $(location) -n sfc-$(subnetPrefix)-$(environment)-rg --tags Application=network Team=networking Department=it Environment=$(environment)
+            failOnStandardError:  true
+    - job: acceptTerms
+      dependsOn: createResourceGroup
+      steps:
       - task: AzureCLI@2
         inputs:
           connectedServiceNameARM: ${{ parameters.azureServicePrincipal }}
-          scriptType: bash
+          scriptType:  bash
           scriptLocation: inlineScript
-          inlineScript: |
-            az group create -l $(location) -n $(subnetPrefix)-$(environment)-rg
-            az vm image terms accept --urn paloaltonetworks:vmseries-flex:byol:10.1.6
+          inlineScript:  az vm image terms accept --urn paloaltonetworks:vmseries-flex:byol:10.1.6
           failOnStandardError: true
+
 
   

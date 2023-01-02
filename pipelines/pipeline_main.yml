@@ -80,7 +80,9 @@ stages:
             echo 'bootstrapAccessKey = '$(bootstrapAccessKey)
             echo 'deployFirewall ='$(deployFirewall)
             echo 'pwd'
+            pwd
             echo 'ls -l'
+            ls -l
 
 #    - job: deployTemplate
 #      steps:

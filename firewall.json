@@ -295,7 +295,7 @@
                             "sourcePortRange": "*",
                             "destinationPortRange": "*",
                             "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "10.16.0.0/16",
+                            "destinationAddressPrefix": "10.18.0.0/16",
                             "access": "Deny",
                             "priority": 4096,
                             "direction": "Outbound",
@@ -426,7 +426,7 @@
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": [
-                        "10.16.0.0/16"
+                        "10.18.0.0/16"
                     ]
                 },
                 "subnets": [

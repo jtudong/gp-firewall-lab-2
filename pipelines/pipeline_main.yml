@@ -73,7 +73,7 @@ stages:
 
 - stage: createFirewall
   jobs:
-    - job: test variables
+    - job: test_variables
       steps:
         - bash: |
             echo 'adminPassword  = '$(adminPassword)

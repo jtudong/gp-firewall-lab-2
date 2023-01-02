@@ -58,7 +58,7 @@ stages:
             connectedServiceNameARM: ${{ parameters.azureServicePrincipal }}
             scriptType: bash
             scriptLocation: inlineScript
-            iinlineScript:  az group create -l $(location) -n sfc-$(subnetPrefix)-$(environment)-rg --tags Application=network Team=networking Department=it Environment=$(environment)
+            inlineScript:  az group create -l $(location) -n sfc-$(subnetPrefix)-$(environment)-rg --tags Application=network Team=networking Department=it Environment=$(environment)
             failOnStandardError:  true
     - job: acceptTerms
       dependsOn: createResourceGroup

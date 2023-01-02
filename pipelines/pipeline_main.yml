@@ -79,6 +79,8 @@ stages:
             echo 'adminPassword  = '$(adminPassword)
             echo 'bootstrapAccessKey = '$(bootstrapAccessKey)
             echo 'deployFirewall ='$(deployFirewall)
+            echo 'pwd'
+            echo 'ls -l'
 
 #    - job: deployTemplate
 #      steps:

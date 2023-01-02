@@ -73,19 +73,26 @@ stages:
 
 - stage: createFirewall
   jobs:
-    - job: deployTemplate
+    - job: test variables
       steps:
-        - bash: echo 'Deploying the firewall'
-        - task: AzureResourceManagerTemplateDeployment@3
-          inputs:
-            deploymentScope: 'Resource Group'
-            azureResourceManagerConnection: ${{ parameters.azureServicePrincipal }}
-            action: 'Create Or Update Resource Group'
-            resourceGroupName: sfc-$(subnetPrefix)-$(environment)-rg
-            location: $(location)
-            templateLocation: 'Linked artifact'
-            csmFile: firewall.json
-            csmParametersFile: firewall.parameters.json
-            overrideParameters: -adminPassword $(adminPassword) -bootstrapAccessKey $(bootstrapAccessKey) -deployFirewall $(deployFirewall)
-            deploymentMode: 'Incremental'
+        - bash: |
+            echo 'adminPassword  = '$(adminPassword)
+            echo 'bootstrapAccessKey = '$(bootstrapAccessKey)
+            echo 'deployFirewall ='$(deployFirewall)
+
+#    - job: deployTemplate
+#      steps:
+#        - bash: echo 'Deploying the firewall'
+#        - task: AzureResourceManagerTemplateDeployment@3
+#          inputs:
+#            deploymentScope: 'Resource Group'
+#            azureResourceManagerConnection: ${{ parameters.azureServicePrincipal }}
+#            action: 'Create Or Update Resource Group'
+#            resourceGroupName: sfc-$(subnetPrefix)-$(environment)-rg
+#            location: $(location)
+#            templateLocation: 'Linked artifact'
+#            csmFile: firewall.json
+#            csmParametersFile: firewall.parameters.json
+#            overrideParameters: -adminPassword $(adminPassword) -bootstrapAccessKey $(bootstrapAccessKey) -deployFirewall $(deployFirewall)
+#            deploymentMode: 'Incremental'
   

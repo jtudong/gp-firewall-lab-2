@@ -6,7 +6,7 @@
             "value": "sfcadmin"
         },
         "bootstrapFileShare": {
-            "value": "bootstrap"
+            "value": "boot-strap"
         },
         "bootstrapStorageAccount": {
             "value": "sfc01ccoesa"

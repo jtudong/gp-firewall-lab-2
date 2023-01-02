@@ -178,7 +178,7 @@
                             "sourcePortRange": "*",
                             "destinationPortRange": "*",
                             "sourceAddressPrefix": "168.63.129.16/32",
-                            "destinationAddressPrefix": "10.16.91.0/24",
+                            "destinationAddressPrefix": "10.18.2.0/24",
                             "access": "Allow",
                             "priority": 1000,
                             "direction": "Inbound",
@@ -369,16 +369,16 @@
                         "properties": {
                             "addressPrefix": "0.0.0.0/0",
                             "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "10.16.92.4",
+                            "nextHopIpAddress": "10.18.3.4",
                             "hasBgpOverride": false
                         }
                     },
                     {
                         "name": "untrust-forced-firewall",
                         "properties": {
-                            "addressPrefix": "10.16.91.0/24",
+                            "addressPrefix": "10.18.2.0/24",
                             "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "10.16.92.4",
+                            "nextHopIpAddress": "10.18.3.4",
                             "hasBgpOverride": false
                         }
                     }
@@ -433,7 +433,7 @@
                     {
                         "name": "[variables('mgmtPrefix')]",
                         "properties": {
-                            "addressPrefix": "10.16.90.0/24",
+                            "addressPrefix": "10.18.4.0/24",
                             "networkSecurityGroup": {
                                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',concat(variables('mgmtPrefix'),'-',parameters('environment'),'-nsg'))]"
                             },
@@ -445,7 +445,7 @@
                     {
                         "name": "[variables('untrustPrefix')]",
                         "properties": {
-                            "addressPrefix": "10.16.91.0/24",
+                            "addressPrefix": "10.18.2.0/24",
                             "networkSecurityGroup": {
                                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',concat(variables('untrustPrefix'),'-',parameters('environment'),'-nsg'))]"
                             },
@@ -457,7 +457,7 @@
                     {
                         "name": "[variables('trustPrefix')]",
                         "properties": {
-                            "addressPrefix": "10.16.92.0/24",
+                            "addressPrefix": "10.18.3.0/24",
                             "networkSecurityGroup": {
                                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',concat(variables('trustPrefix'),'-',parameters('environment'),'-nsg'))]"
                             },
@@ -486,7 +486,7 @@
                         "name": "[variables('mgmtPrefix')]",
                         "properties": {
                             "privateIPAllocationMethod": "Static",
-                            "privateIPAddress": "10.16.90.4",
+                            "privateIPAddress": "10.18.4.4",
                             "subnet": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets',concat(parameters('subnetPrefix'),'-',parameters('environment'),'-vnet'),variables('mgmtPrefix'))]"
                             },
@@ -515,7 +515,7 @@
                         "name": "[variables('untrustPrefix')]",
                         "properties": {
                             "privateIPAllocationMethod": "Static",
-                            "privateIPAddress": "10.16.91.4",
+                            "privateIPAddress": "10.18.2.4",
                             "subnet": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets',concat(parameters('subnetPrefix'),'-',parameters('environment'),'-vnet'),variables('untrustPrefix'))]"
                             },
@@ -544,7 +544,7 @@
                         "name": "[variables('trustPrefix')]",
                         "properties": {
                             "privateIPAllocationMethod": "Static",
-                            "privateIPAddress": "10.16.92.4",
+                            "privateIPAddress": "10.18.3.4",
                             "subnet": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('subnetPrefix'),'-',parameters('environment'),'-vnet'),variables('trustPrefix'))]"
                             }
@@ -555,6 +555,7 @@
             }
         },
         {
+            // create the firewall
             "name": "[parameters('fwName')]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2021-03-01",

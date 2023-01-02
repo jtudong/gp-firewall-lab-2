@@ -105,7 +105,7 @@
         "trustPrefix": "[concat(parameters('subnetPrefix'),'-trusted')]",
         "uniqueId": "[uniqueString(resourceGroup().id)]",
         "untrustPrefix": "[concat(parameters('subnetPrefix'),'-untrusted')]",
-        "customData": "[concat('storage-account=',parameters('bootstrapStorageAccount'),',access-key=',parameters('bootstrapAccessKey'),',file-share=',parameters('bootstrapFileShare'),',share-directory=')]"
+        "customData": "[concat('storage-account=',parameters('bootstrapStorageAccount'),',access-key=',parameters('bootstrapAccessKey'),',file-share=',parameters('bootstrapFileShare'),',share-directory=',parameters('fwName'))]"
     },
     "resources": [
         {

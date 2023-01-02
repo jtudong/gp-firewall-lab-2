@@ -47,6 +47,8 @@ parameters:
 
 variables:
 - group: firewall-vars-1
+- name: varResourceGroupName
+  value: sfc-$(subnetPrefix)-$(environment)-rg
 
 stages:
 - stage: prerequisites
@@ -79,6 +81,7 @@ stages:
             echo 'adminPassword  = '$(adminPassword)
             echo 'bootstrapAccessKey = '$(bootstrapAccessKey)
             echo 'deployFirewall ='$(deployFirewall)
+            echo 'varResourceGroupName ='$(varResourceGroupName)
             echo 'pwd'
             pwd
             echo 'ls -l'

@@ -102,6 +102,7 @@
             "Environment": "[parameters('environment')]",
             "Application": "[parameters('subnetPrefix')]"
         },
+        "storageAccountName": "[concat(parameters('fwName'),skip(variables('uniqueId'),5),'sa')]",
         "trustPrefix": "[concat(parameters('subnetPrefix'),'-trusted')]",
         "uniqueId": "[uniqueString(resourceGroup().id)]",
         "untrustPrefix": "[concat(parameters('subnetPrefix'),'-untrusted')]",
@@ -620,6 +621,37 @@
                         }
                     ]
                 }
+            }
+        },
+        //
+        //
+        //
+        //
+        //
+        //  Create the test server
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        {
+            //  storage account
+            "name": "[variables('storageAccountName')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2021-04-01",
+            "tags": "[variables('tags')]",
+            "location": "[parameters('location')]",
+            "kind": "StorageV2",
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
             }
         }
     ],

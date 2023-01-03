@@ -32,6 +32,9 @@
         "paVmSize": {
             "value": "Standard_DS3_v2"
         },
+        "serverVmName": {
+            "value": "aw3lfwtest01"
+        },
         "subnetPrefix": {
             "value": "fwlab"
         }

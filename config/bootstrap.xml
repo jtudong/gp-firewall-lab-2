@@ -1149,7 +1149,7 @@ sj5OTUaDuzDTrje7avirPt4lj7/Owj3I
                 <entry name="Destination NAT for aw3lfwtest01" uuid="862fea69-f2ab-4368-9ac1-c5391d1b942e">
                   <destination-translation>
                     <translated-port>22</translated-port>
-                    <translated-address>10.18.4.10</translated-address>
+                    <translated-address>10.18.3.10</translated-address>
                   </destination-translation>
                   <to>
                     <member>Untrust</member>

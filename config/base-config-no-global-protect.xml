@@ -833,12 +833,12 @@ sj5OTUaDuzDTrje7avirPt4lj7/Owj3I
               <rules>
                 <entry name="intrazone-default" uuid="24421490-76af-4032-aed7-4fbe8704d405">
                   <action>deny</action>
-                  <log-start>no</log-start>
+                  <log-start>yes</log-start>
                   <log-end>yes</log-end>
                 </entry>
                 <entry name="interzone-default" uuid="c9793714-69b1-478d-a666-4e984ca54315">
                   <action>deny</action>
-                  <log-start>no</log-start>
+                  <log-start>yes</log-start>
                   <log-end>yes</log-end>
                 </entry>
               </rules>

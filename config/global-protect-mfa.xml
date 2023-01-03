@@ -1094,6 +1094,7 @@ ieWrLBa2guUiv9zauvkf1jAdsyjcn9wFMlW1FxCjqUL35SSS
                     <member>any</member>
                   </category>
                   <application>
+                    <member>apt-get</member>
                     <member>dns</member>
                     <member>ntp</member>
                     <member>ping</member>

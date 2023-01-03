@@ -995,6 +995,7 @@ sj5OTUaDuzDTrje7avirPt4lj7/Owj3I
                     <member>any</member>
                   </category>
                   <application>
+                    <member>apt-get</member>
                     <member>dns</member>
                     <member>ntp</member>
                     <member>ping</member>

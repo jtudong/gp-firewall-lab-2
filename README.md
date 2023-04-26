@@ -27,3 +27,12 @@ The following parameters are required:
 |paOffer|yes|vmseries1,vmseries-flex|vmseries1|
 |paVmSize|yes|Standard_DS3_v2,Standard_DS4_v2,Standard_DS5_v2|Standard_DS3_v2|
 |subnetPrefix|no||null|
+
+### Pipeline variables
+
+|Name|Value
+|---------|---------|
+|deployFirewall|true|
+|environment|sandbox|
+|location|westus3|
+|subnetPrefix|fwlab|

@@ -1,3 +1,6 @@
+az account set -s vs_sandbox
+az group list -o table | grep fwlab1
+
 az group delete -n sfc-fwlab-sandbox-rg --yes --no-wait
 watch 'az group list -o table | grep fwlab'
 
@@ -6,3 +9,7 @@ az deployment group validate -g sfc-fwlab-sandbox-rg -f firewall.json -p firewal
 az deployment group create -c -g sfc-fwlab-sandbox-rg -f firewall.json -p firewall.parameters.json -n fwlab-
 
 git switch master&&git merge dev&&git push&&git push github&&git switch dev
+
+az pipelines run -p gp-firewall-lab-2 --name pipeline_main --branch master --open
+az pipelines run -p gp-firewall-lab-2 --name pipeline_main --branch dev #--open
+az pipelines runs list -p gp-firewall-lab-2

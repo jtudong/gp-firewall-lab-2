@@ -22,20 +22,20 @@ variables:
 - name: varResourceGroupName
   value: sfc-$(subnetPrefix)-$(environment)-rg
 
-steps:
-- script: |
-    echo $(resources.pipeline.main.pipelineID)
-    echo $(resources.pipeline.main.runName)
-    echo $(resources.pipeline.main.runID)
-    echo $(resources.pipeline.main.runURI)
-    echo $(resources.pipeline.main.sourceBranch)
-    echo $(resources.pipeline.main.sourceCommit)
-    echo $(resources.pipeline.main.sourceProvider)
-    echo $(resources.pipeline.main.requestedFor)
-    echo $(resources.pipeline.main.requestedForID)
-    echo $(subnetPrefix)
-    echo $(location)
-    echo $(environment)
+#steps:
+#- script: |
+#    echo $(resources.pipeline.main.pipelineID)
+#    echo $(resources.pipeline.main.runName)
+#    echo $(resources.pipeline.main.runID)
+#    echo $(resources.pipeline.main.runURI)
+#    echo $(resources.pipeline.main.sourceBranch)
+#    echo $(resources.pipeline.main.sourceCommit)
+#    echo $(resources.pipeline.main.sourceProvider)
+#    echo $(resources.pipeline.main.requestedFor)
+#    echo $(resources.pipeline.main.requestedForID)
+#    echo $(subnetPrefix)
+#    echo $(location)
+#    echo $(environment)
 jobs:
   - job: createResourceGroup
     steps:

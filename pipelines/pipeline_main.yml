@@ -15,7 +15,7 @@ parameters:
   - name: azureServicePrincipal
     displayName: Azure Service Principal
     type: string
-    default: gp-firewall-lab-2
+    default: JohnTudong_vs_sandbox_20230426
 ###  moved to variable group 'firewall-vars-1'
 #  - name: subnetPrefix
 #    displayName: Subnet Prefix

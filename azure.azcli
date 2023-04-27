@@ -13,3 +13,5 @@ git switch master&&git merge dev&&git push&&git push github&&git switch dev
 az pipelines run -p gp-firewall-lab-2 --name pipeline_main --branch master --open
 az pipelines run -p gp-firewall-lab-2 --name pipeline_main --branch dev #--open
 az pipelines runs list -p gp-firewall-lab-2
+
+ssh-keygen -f "/home/linuxuser/.ssh/known_hosts" -R "pavm01.westus3.cloudapp.azure.com"

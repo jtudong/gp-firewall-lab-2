@@ -1,17 +1,42 @@
 az account set -s vs_sandbox
-az group list -o table | grep fwlab1
+az group list -o table | grep fwlab
 
 az group delete -n sfc-fwlab-sandbox-rg --yes --no-wait
 watch 'az group list -o table | grep fwlab'
 
 az group create -l westus3 -n sfc-fwlab-sandbox-rg --tags Application=network Team=networking Department=it Environment=sandbox
-az deployment group validate -g sfc-fwlab-sandbox-rg -f firewall.json -p firewall.parameters.json
-az deployment group create -c -g sfc-fwlab-sandbox-rg -f firewall.json -p firewall.parameters.json -n fwlab-
+az deployment group validate -g sfc-fwlab-sandbox-rg -f firewall.json -p firewall.parameters.jsonc
+az deployment group create -c -g sfc-fwlab-sandbox-rg -f firewall.json -p firewall.parameters.jsonc \
+ adminPassword= \
+ -n fwlab-2023
+
+az vm show -g sfc-fwlab-sandbox-rg -n aw3lpalsfw -d
+az vm deallocate -g sfc-fwlab-sandbox-rg -n aw3lfwtest01 --no-wait
+az vm deallocate -g sfc-fwlab-sandbox-rg -n aw3lpalsfw --no-wait
+az vm start -g sfc-fwlab-sandbox-rg -n aw3lfwtest01 --no-wait
+az vm start -g sfc-fwlab-sandbox-rg -n aw3lpalsfw --no-wait
+
 
 git switch master&&git merge dev&&git push&&git push github&&git switch dev
 
 az pipelines run -p gp-firewall-lab-2 --name pipeline_main --branch master --open
 az pipelines run -p gp-firewall-lab-2 --name pipeline_main --branch dev #--open
 az pipelines runs list -p gp-firewall-lab-2
+az pipelines list -p gp-firewall-lab-2
 
 ssh-keygen -f "/home/linuxuser/.ssh/known_hosts" -R "pavm01.westus3.cloudapp.azure.com"
+#ssh-keygen -f "/home/linuxuser/.ssh/known_hosts" -R "[pavm01-gp.westus3.cloudapp.azure.com]:6622"
+#ssh -o StrictHostKeyChecking=no sfcadmin@pavm01.westus3.cloudapp.azure.com
+#ssh -o StrictHostKeyChecking=no localadmin@pavm01-gp.westus3.cloudapp.azure.com -p 6622
+
+# certificate server setup
+#az deployment group create -c -g sfc-fwlab1-sandbox-rg -f certserver.json -p adminPassword=$adminPassword \
+#  -n fwtest1-2023$deployment 
+#apt update && apt install nginx -y && snap install core && snap refresh core && snap install --classic certbot
+#ln -s /snap/bin/certbot /usr/bin/certbot
+#certbot certonly --manual
+#cp /etc/letsencrypt/live/fwlab1-mgmt.westus3.cloudapp.azure.com/*.pem /home/localadmin
+#chown localadmin:localadmin *.pem
+#rsync -avP localadmin@pavm01.westus3.cloudapp.azure.com:/home/localadmin/*.pem docs/certificates/fwlab1-management/
+#ls -l docs/certificates/fwlab1-management/
+#openssl x509 --text --noout --in docs/certificates/fwlab1-management/cert.pem
